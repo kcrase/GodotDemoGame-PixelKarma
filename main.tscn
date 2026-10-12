@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://1xxbpgy1h15y"]
+
+[ext_resource type="Script" uid="uid://b6vfu8jm7e4dg" path="res://main.gd" id="1_h2yge"]
+[ext_resource type="PackedScene" uid="uid://ldsx6rgspuoo" path="res://player.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://c2nphvu27bmo3" path="res://mob.tscn" id="2_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://tviglmpea1iv" path="res://hud.tscn" id="4_1bvp3"]
+
+[sub_resource type="Curve2D" id="Curve2D_7dm0k"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 1, 0, 0, 0, 0, 479, 2, 0, 0, 0, 0, 482, 720, 0, 0, 0, 0, 1, 715, 0, 0, 0, 0, 0, -1)
+}
+point_count = 6
+
+[node name="Main" type="Node" unique_id=1583203877]
+script = ExtResource("1_h2yge")
+mob_scene = ExtResource("2_1bvp3")
+
+[node name="Player" parent="." unique_id=809888949 instance=ExtResource("1_ig7tw")]
+
+[node name="MobTimer" type="Timer" parent="." unique_id=979352139]
+wait_time = 0.5
+
+[node name="ScoreTimer" type="Timer" parent="." unique_id=1574826922]
+
+[node name="StartTimer" type="Timer" parent="." unique_id=1185462295]
+wait_time = 2.0
+one_shot = true
+
+[node name="StartPosition" type="Marker2D" parent="." unique_id=1814348949]
+position = Vector2(240, 450)
+
+[node name="MobPath" type="Path2D" parent="." unique_id=1687934550]
+curve = SubResource("Curve2D_7dm0k")
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath" unique_id=1171567222]
+position = Vector2(0, -1)
+rotation = 2.0344439
+
+[node name="HUD" parent="." unique_id=451735801 instance=ExtResource("4_1bvp3")]
+
+[connection signal="hit" from="Player" to="." method="_on_player_hit"]
+[connection signal="hit" from="Player" to="." method="game_over"]
+[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
+[connection signal="start_game" from="HUD" to="." method="new_game"]
